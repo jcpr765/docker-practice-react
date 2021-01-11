@@ -1,0 +1,15 @@
+language: generic
+# Letting travis know we need super user level permissions to run this build (since we need this for Docker)
+sudo: required
+# Let Travis know we need the Docker cli installed
+services:
+  - docker
+# Series of commands that we need to run before we do our travis action (i,e. Run our tests / deploy our app)
+before_install:
+  - docker build -t juankimorales/docker-practice-react -f Dockerfile.dev .
+
+# Section for the commands that we need to run our test suite
+# Travis will watch the output of these commands. If it ever gets a status code != 0, it will assume something went wrong
+# NOTE: Travis assumes that these commands exit automatically. In the case of npm run test, by default that is not the case
+script:
+  - docker run -e CI=true juankimorales/docker-practice-react npm run test
