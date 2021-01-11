@@ -13,3 +13,24 @@ before_install:
 # NOTE: Travis assumes that these commands exit automatically. In the case of npm run test, by default that is not the case
 script:
   - docker run -e CI=true juankimorales/docker-practice-react npm run test
+
+# Section that handles deploying
+deploy:
+  # Travis is pre-configured for deploying to various services like EBS
+  provider: elasticbeanstalk
+  # AWS region where our EBS is
+  region: "us-east-2"
+  # Application name
+  app: "docker-practice-react"
+  # Environment name
+  env: "DockerPracticeReact-env"
+  # Name of the bucket that travis will put the zip file of our application into. Can be found in S3
+  bucket_name: "elasticbeanstalk-us-east-2-298694261941"
+  # Path for the folder where we will save our zip file. Generally the app name
+  bucket_path:  "docker-practice-react"
+  # Only deploy the application when code is pushed to master
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
